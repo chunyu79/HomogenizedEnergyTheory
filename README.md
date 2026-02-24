@@ -76,22 +76,7 @@ where $r$ is the penalty parameter.
 
 ### Finite Element Implementation
 
-The weak form yields a **fully coupled system**:
-
-$$
-\begin{bmatrix}
-\mathbf{K}_{uu} & \mathbf{K}_{u\varepsilon} & \mathbf{K}_{u\lambda} \\
-\mathbf{K}_{\varepsilon u} & \mathbf{K}_{\varepsilon\varepsilon} & \mathbf{K}_{\varepsilon\lambda} \\
-\mathbf{K}_{\lambda u} & \mathbf{K}_{\lambda\varepsilon} & \mathbf{0}
-\end{bmatrix}
-\begin{bmatrix}
-\mathbf{u}_N \\ \boldsymbol{\varepsilon}_N \\ \boldsymbol{\lambda}_N
-\end{bmatrix}
-=
-\begin{bmatrix}
-\mathbf{b} \\ \mathbf{0} \\ \mathbf{0}
-\end{bmatrix}
-$$
+The weak form yields a **fully coupled system**.
 
 **Implementation Features:**
 - Quadratic elements ($C^0$ continuity) sufficient — no need for complex $C^1$ elements
