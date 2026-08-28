@@ -1,0 +1,54 @@
+modelspace				=	planestrain #planestress, planestrain or 3D
+
+[mesh]
+	meshfile			=	'../damagetest/data/LshapeCrack_N20V3.msh'	#'./data/LshapeCrack_N20_dense.msh'  './data/LshapeCrack_N20V3.msh'
+	order				=	2 		#FE order. may not be equal to mesh order
+	meshrefinement		=	0		#number of times for uniform mesh refinement 
+	
+[materials]		
+	[./concrete]					 
+		E				=	18000
+		v				=	0.18
+		lengthscale		=	5		#5
+		MaxStrain		=	0.00018
+		DamageBeta		=	1765
+#	[../perturbation]	 
+#		randomField		= 	'./randomField.gf'
+#		scale			=	0.02 #[-1,1]*scale
+[]								 
+	
+[region_properties]
+	[./wholeregion]
+		elementsetid	=	0		#start from 0 
+		material		=	concrete
+[]
+	
+[boundaries]						# boundary conditions
+	[./botEdge]
+		elementsetid	=	0		#start from 0 
+		type			=	displacement 
+		ux				=	0.0
+		uy				=	0.0
+	[../pullEdge]
+		elementsetid	=	1		  
+		type			=	displacement  #displacement #traction 
+		uy				=  	1
+		#ty              = 	100
+
+[]
+
+[solution]							# options for solution
+	finitedeformation   =   false    # finite deformation must use admm solver
+	admm				=	false
+	newton				=	true
+	penalty				=	1.0e4
+	linearsolver		=	MUMPS	#PCG,GMRES,FGMRES
+	tolerance			=	1.e-4
+	maximumiteration	=	2000
+	printlevel			=	0
+	damagemaximumiteration	=	1000
+	maximumstepsize		=	0.01	#0.02   #<0.002, explicit solution will be applied.
+
+[postprocess]			
+	paraview			=	1
+	output				=	'u,e,s1,pe,ps,se' # u-displacement, e-corrected strain, s0-stress from displacement (conventional stress), s1-stress from correected strain,  se-strain energy,l-multiplier

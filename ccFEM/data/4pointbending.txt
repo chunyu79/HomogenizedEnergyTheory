@@ -1,0 +1,81 @@
+modelspace				=	planestrain #planestress, planestrain or 3D
+
+[mesh]
+	meshfile			=	'./4pointbending.msh'
+	order				=	2 		#FE order. may not be equal to mesh order
+	meshrefinement		=	0		#number of times for uniform mesh refinement 
+	
+[materials]		
+	[./Matrix]					 
+		E				=	2000
+		v				=	0.45
+		lengthscale		=	0.8 #0.8
+		MaxStrain		=	100
+		DamageBeta		=	18
+	[../Adhesive]					 
+		E				=	4000
+		v				=	0.35
+		lengthscale		=	0.8 #0.2
+		MaxStrain		=	100
+		DamageBeta		=	18
+
+[]								 
+	
+[region_properties]
+	[./matrix]
+		elementsetid	=	0		#start from 0 
+		material		=	Matrix
+	[../adhesive]
+		elementsetid	=	1		#start from 0 
+		material		=	Adhesive 
+[]
+	
+[boundaries]						# boundary conditions
+		[./leftsupportEnd]
+		elementsetid	=	0		#start from 0 
+		type			=	displacement 
+		point			=	1
+		ux				=	0.0
+		uy				=	0.0
+	
+	[../rightsupportEnd]
+		elementsetid	=	1		  
+		type			=	displacement 	
+		point			=	0	 
+		uy				=	0.0
+
+
+	[../loadingEnd1]
+		positionsetid	=	0		
+		#elementsetid	=	2  
+		type			=	displacement	#traction 
+		px				=	1.625
+		py				=	0.5		 
+		uy				=	-1.0
+
+	[../loadingEnd2]
+		positionsetid	=	1	
+		#elementsetid	=	3	  
+		type			=	displacement	#traction 
+		px				=	4.375
+		py				=	0.5		 
+		uy				=	-1.0
+
+[]
+
+[solution]							# options for solution
+	finitedeformation   =   true    # finite deformation must use admm solver
+	admm				=	false
+	newton				=	true
+	reorderingreuse		=	true  
+	penalty				=	1.0e5
+	linearsolver		=	MUMPS	#PCG,GMRES,FGMRES
+	tolerance			=	1.e-5
+	maximumiteration	=	100
+	printlevel			=	0
+	damagemaximumiteration	=	100
+#	skipzeros			=	0
+	maximumstepsize		=	0.03
+[postprocess]			
+	paraview			=	1
+	output				=	'u,e,se' # u-displacement, e-strain, s-stress

@@ -125,15 +125,24 @@ $$\delta W_c + \delta W_h = \delta W_{ext}$$
 
 ---
 
-## Upcoming: Extension to Quasi-Brittle Fracture
+## Extension to Quasi-Brittle Fracture
 
-We are currently extending this framework to **quasi-brittle fracture problems** by:
+We have extended this framework to **quasi-brittle fracture problems** by:
 
 - Incorporating **homogenized damage energy release rate**
 - Coupling with **gradient-enhanced damage models**
 - Addressing **stress singularity regularization** at crack tips using the natural length scale $h$
 
-Stay tuned for updates on damage mechanics implementation and fracture simulations.
+Refer the theory to:
+  1. Cao, Y. and Zhang, C.Y. (2026). Damaged Homogenized Energy Model based on a Decomposition of Higher-Order Strain Energy Density, International Journal of Engineering Science. *International Journal of Engineering Science*, 223, 104498.
+  2. Cao, Y. and Zhang, C.Y. (2025). A Two-scale High-order Damaged Elasticity Theory and Solution Procedure for Quasi-brittle Fracture. *Computer Methods in Applied Mechanics and Engineering*, 445, 118206. 
+
+## Extension to Elasto-plasticity
+
+We are extending this framework to **elasto-plastic problems** by:
+- Incorporating **homogenized plastic dissipation**
+- Unified treatment of **elasticity and plasticity**
+Stay tuned for our progress.
 
 ---
 

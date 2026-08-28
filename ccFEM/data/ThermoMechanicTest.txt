@@ -1,0 +1,88 @@
+modelspace				=	planestress #planestress, planestrain or 3D
+
+[mesh]
+	meshfile			=	'./data/TypeICrack_thin_dense2.msh'
+	order				=	2 		#FE order. may not be equal to mesh order
+	meshrefinement		=	0		#number of times for uniform mesh refinement 
+	
+[materials]		
+	[./matrixmaterial]					 
+		E				=	3e4
+		v				=	0.3
+		lengthscale		=	0.05	#0.5
+		MaxStrain		=	0.01 
+		DamageBeta		=	100
+		CTE             =       5.0e-6      #1        
+		k               =       10.0         #mJ/mm/K e0
+		#Q_hs           =       7.0e-2       #mW/mm^3 e-6
+		rho             =       5.0e-9     #t/mm^3  e-12
+		T_ref           =       300			#K
+		T_init          =       300
+		C_p             =       280e6       #mJ/t/K e6
+	[../crackmaterial]					 
+		E				=	3e4
+		v				=	0.3
+		lengthscale		=	0.05	#0.5
+		MaxStrain		=	0.01 
+		DamageBeta		=	100
+		CTE             =       5.0e-6      #1        
+		k               =       10.0          #mJ/mm/K e0
+		#Q_hs           =       7.0e-2       #mW/mm^3 e-6
+		rho             =       5.0e-9     #t/mm^3  e-12
+		T_ref           =       300			#K
+		T_init          =       300
+		C_p             =       280e6       #mJ/t/K e6
+		MaterialDamage	=	1.0
+[]				 
+	
+[region_properties]
+	[./matrix]
+		elementsetid	=	0		#start from 0 
+		material		=	matrixmaterial
+	[../crack]
+		elementsetid	=	1		#start from 0 
+		material		=	crackmaterial
+[]
+	
+[boundaries]						# boundary conditions
+	[./botEdge]
+		elementsetid	=	0		#start from 0 
+		type			=	displacement 
+		ux				=	0.0
+		uy				=	0.0
+	[../topEdge]
+		elementsetid	=	1		  
+		type			=	displacement  #displacement #traction 
+		uy				=  	0.2 #0.5
+[]
+
+[thermalBoundaries]                 # thermal boundary conditions
+	[./botEdge]
+			elementsetid    = 0
+        	type            = temperature		# 第一类边界条件
+        	T         		= 300    				# 
+	[../topEdge]
+			elementsetid    = 1
+        	type            = temperature		# 第一类边界条件
+        	T         		= 800    				# 
+[]
+
+[solution]							# options for solution
+	thermalmechanical	=	true
+	finitedeformation   =   true    # finite deformation must use admm solver
+	admm				=	true
+	newton				=	true
+	#reorderingreuse		=	false
+	#skipzeros			=	0
+	totaltime			=	1.0e1				
+	penalty				=	1.0e5
+	linearsolver		=	MUMPS	#PCG,GMRES,FGMRES
+	tolerance			=	1.e-6
+	maximumiteration	=	2000
+	printlevel			=	0
+	damagemaximumiteration	=	200   # 800
+	maximumstepsize		=	0.05	#0.02   #<0.002, explicit solution will be applied.
+
+[postprocess]			
+	paraview			=	1
+	output				=	'u,e,s1,pe,ps,se' # u-displacement, e-corrected strain, s0-stress from displacement (conventional stress), s1-stress from correected strain,  se-strain energy,l-multiplier
